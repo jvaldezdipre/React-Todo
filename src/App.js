@@ -2,6 +2,7 @@ import React from 'react';
 import TodoList from './components/TodoList';
 import TodoForm from './components/TodoForm';
 import './components/Todo.css';
+import Search from './components/Search';
 
 class App extends React.Component {
   // you will need a place to store your state in this component.
@@ -18,6 +19,7 @@ class App extends React.Component {
           completed: true,
         },
       ],
+      search: '',
     };
   }
 
@@ -64,11 +66,28 @@ class App extends React.Component {
     });
   };
 
+  //search filter
+  searchChangeHandler = e => {
+    this.setState({
+      search: e.target.value,
+    });
+    // console.log(this.state.search);
+  };
+
   render() {
+    let filteredTodos = this.state.todos.filter(todo => {
+      return todo.name.toLowerCase().includes(this.state.search.toLowerCase());
+    });
+
     return (
       <div>
         <h2>Welcome to your Todo App!</h2>
-        <TodoList todos={this.state.todos} completeTodo={this.completeTodo} />
+        <Search searchChangeHandler={this.searchChangeHandler} />
+        <TodoList
+          todos={this.state.todos}
+          completeTodo={this.completeTodo}
+          filteredTodos={filteredTodos}
+        />
         <TodoForm addTodo={this.addTodo} />
         <button onClick={this.clearCompleted}>Clear Completed</button>
       </div>
